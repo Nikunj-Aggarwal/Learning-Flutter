@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app_stateful_widget/answer.dart';
+import 'package:quiz_app_stateful_widget/question.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,22 +11,30 @@ class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return MyAppState();
+    return _MyAppState();
     throw UnimplementedError();
   }
 }
 
-class MyAppState extends State<MyApp> {
-  var questionIndex = 0;
-  var questions = ['What\'s your favurite color?',
-  'What\'s your favourite animal'];
+class _MyAppState extends State<MyApp> {
+  var _questionIndex = 0;
+  var _questions = [
+    {
+      'questionText':'What\'s your favurite color?',
+      'answers': ['Black','Red','Green', 'White'],
+    },
+    {
+      'questionText':'What\'s your favourite animal',
+      'answers': ['Monkey','Chimpanzee','Elephant', 'Zebra'],
+    }
+  ];
 
-  void questionAnswer() {
+  void _questionAnswer() {
     setState(() {
-      if(questionIndex<questions.length-1) {
-        questionIndex+=1;
+      if(_questionIndex<_questions.length-1) {
+        _questionIndex+=1;
       } else {
-        questionIndex-=1;
+        _questionIndex-=1;
       }
     });
     print('Answer Chosen');
@@ -37,12 +47,12 @@ class MyAppState extends State<MyApp> {
    
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text(questions[questionIndex]),),
+        appBar: AppBar(title: MyWidget('Quiz App'),),
         body: Column(children: [
-          Text(questions[questionIndex]),
-          ElevatedButton(onPressed:questionAnswer, child: Text('Answer 1')),
-          ElevatedButton(onPressed:questionAnswer, child: Text('Answer 2')),
-          ElevatedButton(onPressed:questionAnswer, child: Text('Answer 3')),
+          MyWidget(_questions[_questionIndex]['questionText'] as String),
+          ...(_questions[_questionIndex]['answers'] as List<String>).map((answer){
+            return Answer(_questionAnswer, answer);
+          }).toList(),
         ]),
         ),
 
